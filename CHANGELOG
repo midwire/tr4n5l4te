@@ -1,3 +1,9 @@
+*0.1.6* (January 14, 2020)
+
+* Fix rubocop violations
+* Upgrade gems to address CVEs
+* Pass `permitted_classes` array to allow new YAML.safe_load to work properly
+
 *0.1.5* (May 06, 2019)
 
 * Fixed phantomjs selector, migration to Optimist gem - Thanks @kirylpl
