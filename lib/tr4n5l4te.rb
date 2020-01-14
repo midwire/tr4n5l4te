@@ -2,7 +2,6 @@
 
 require 'tr4n5l4te/version'
 
-require 'midwire_common/string'
 require 'midwire_common/yaml_setting'
 require 'midwire_common/hash'
 
@@ -15,7 +14,7 @@ module Tr4n5l4te
     end
 
     def string_id
-      to_s.snakerize
+      'tr4n5l4te'
     end
 
     def default_config_directory
