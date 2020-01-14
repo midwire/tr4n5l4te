@@ -1,8 +1,10 @@
+# frozen_string_literal: true
+
 require 'open-uri'
 
 module Tr4n5l4te
   class Translator
-    START_PAGE = 'https://translate.google.com'.freeze
+    START_PAGE = 'https://translate.google.com'
 
     attr_reader :sleep_time, :agent
 
@@ -15,6 +17,7 @@ module Tr4n5l4te
       puts "Translating: #{text}"
       encoded_text = validate_and_encode(text)
       return '' if encoded_text == ''
+
       smart_visit(translator_url(encoded_text, from_lang, to_lang))
       result_box = browser.find('.tlid-translation')
       result_box.text
@@ -25,8 +28,8 @@ module Tr4n5l4te
     def validate_and_encode(text)
       return '' if text.nil?
       fail "Cannot translate a [#{text.class}]: '#{text}'" unless text.respond_to?(:gsub)
-      text.strip!
-      URI.encode(text)
+
+      CGI.escape(text.strip)
     end
 
     def smart_visit(url)

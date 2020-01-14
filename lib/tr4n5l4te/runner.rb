@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'optimist'
 require 'colored'
 require 'fileutils'
@@ -55,7 +57,8 @@ module Tr4n5l4te
 
     def from_lang
       md = File.basename(options[:yaml_file]).match(/^(\w\w)\.yml$/)
-      raise "Could not determine language from yaml file: '#{options[:yaml_file]}'" unless md
+      fail "Could not determine language from yaml file: '#{options[:yaml_file]}'" unless md
+
       md[1]
     end
 
@@ -68,31 +71,39 @@ module Tr4n5l4te
 
     # rubocop:disable Metrics/MethodLength
     def collect_args
+      # rubocop:disable Metrics/BlockLength
       Optimist.options do
+        # rubocop:enable Metrics/BlockLength
         opt(
           :yaml_file,
           "A YAML locale file - filename determines source language 'en.yml' - English",
-          type: :string, required: false, short: 'y')
+          type: :string, required: false, short: 'y'
+        )
         opt(
           :lang,
           'Destination language',
-          type: :string, required: false, short: 'l')
+          type: :string, required: false, short: 'l'
+        )
         opt(
           :list,
           'List known languages',
-          type: :boolean, required: false)
+          type: :boolean, required: false
+        )
         opt(
           :sleep_time,
           'Sleep time',
-          type: :integer, default: 2, short: 's')
+          type: :integer, default: 2, short: 's'
+        )
         opt(
           :timeout,
           'Poltergeist timeout option - default 30',
-          type: :integer, default: 30, short: 't')
+          type: :integer, default: 30, short: 't'
+        )
         opt(
           :verbose,
           'Be verbose with output',
-          type: :boolean, required: false, short: 'v', default: false)
+          type: :boolean, required: false, short: 'v', default: false
+        )
       end
     end
     # rubocop:enable Metrics/MethodLength

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'capybara'
 require 'capybara/poltergeist'
 require 'yaml'
@@ -16,7 +18,7 @@ module Tr4n5l4te
 
   class Agent
     # rubocop:disable Metrics/LineLength
-    DEFAULT_UA = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_3) AppleWebKit/601.4.4 (KHTML, like Gecko) Version/9.0.3 Safari/601.4.4'.freeze
+    DEFAULT_UA = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_3) AppleWebKit/601.4.4 (KHTML, like Gecko) Version/9.0.3 Safari/601.4.4'
     # rubocop:enable Metrics/LineLength
 
     attr_reader :browser
@@ -27,9 +29,11 @@ module Tr4n5l4te
       browser.driver.headers = { 'User-Agent' => DEFAULT_UA }
     end
 
-    # rubocop:disable Metrics/AbcSize, Lint/AssignmentInCondition
     def load_cookies(cookie_file)
-      return false unless cookie_hash = YAML.load(File.read(cookie_file))
+      return false unless cookie_hash = YAML.safe_load(
+        File.read(cookie_file), permitted_classes: [Capybara::Poltergeist::Cookie]
+      )
+
       browser.driver.clear_cookies
       cookie_hash.each do |key, cookie_obj|
         browser.driver.set_cookie(
@@ -43,7 +47,7 @@ module Tr4n5l4te
         )
       end
     end
-    # rubocop:enable Metrics/AbcSize, Lint/AssignmentInCondition
+    # rubocop:enable
 
     def store_cookies(cookie_file)
       FileUtils.mkdir_p(File.dirname(cookie_file))

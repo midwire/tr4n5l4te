@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'tr4n5l4te/version'
 
 require 'midwire_common/string'

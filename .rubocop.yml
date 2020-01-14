@@ -1,5 +1,6 @@
 AllCops:
-  # Include gemspec and Rakefile
+  TargetRubyVersion: 2.4
+
   Include:
     - '**/*.gemspec'
     - '**/*.podspec'
@@ -12,9 +13,19 @@ AllCops:
     - '**/Podfile'
     - '**/Thorfile'
     - '**/Vagrantfile'
+    - '**/*.rb'
   Exclude:
+    - 'Capfile'
+    - 'tmp/**/*'
+    - 'log/**/*'
+    - 'db/**/*'
     - 'vendor/**/*'
     - 'stubs/**/*'
+    - 'bin/**/*'
+    - 'node_modules/**/*'
+    - 'features/step_definitions/*'
+    - 'config/deploy.rb'
+    - 'config/deploy/**/*.rb'
 
 # Checks formatting of special comments
 CommentAnnotation:
@@ -31,16 +42,7 @@ CommentAnnotation:
 Style/Documentation:
   Enabled: false
 
-Style/FileName:
-  Enabled: false
-
-Style/AlignParameters:
-  EnforcedStyle: with_fixed_indentation
-
 Style/RegexpLiteral:
-  Enabled: false
-
-Style/EmptyLinesAroundBlockBody:
   Enabled: false
 
 Style/RaiseArgs:
@@ -55,24 +57,78 @@ Style/SignalException:
 Style/ClassAndModuleChildren:
   Enabled: false
 
-Style/MultilineMethodCallIndentation:
-  EnforcedStyle: indented
-  IndentationWidth: 4
-
-Style/CaseIndentation:
-  Enabled: false
-
 Style/TrivialAccessors:
   Enabled: false
 
 Style/NumericLiterals:
   Enabled: false
 
+Style/EmptyMethod:
+  Enabled: false
+
+Style/MixinUsage:
+  Enabled: false
+
+Style/AndOr:
+  Enabled: false
+
+Style/FrozenStringLiteralComment:
+  EnforcedStyle: always
+
+# String#format is private now
+Style/FormatString:
+  Enabled: false
+
+Style/Alias:
+  EnforcedStyle: prefer_alias_method
+
+########################################
+# Layout Cops
+
+Layout/LineLength:
+  Max: 110
+  Exclude:
+    - 'app/views/**/*'
+
+Layout/ParameterAlignment:
+  EnforcedStyle: with_fixed_indentation
+
+Layout/ArgumentAlignment:
+  EnforcedStyle: with_fixed_indentation
+
+Layout/AssignmentIndentation:
+  Enabled: false
+
+Layout/EmptyLinesAroundBlockBody:
+  Enabled: false
+
+Layout/MultilineMethodCallIndentation:
+  EnforcedStyle: indented
+  IndentationWidth: 4
+
+Layout/CaseIndentation:
+  Enabled: false
+
+Layout/ElseAlignment:
+  Enabled: false
+
+Layout/EndAlignment:
+  EnforcedStyleAlignWith: variable
+
+########################################
+# Naming Cops
+
+Naming/FileName:
+  Enabled: false
+
+########################################
+# Security Cops
+
+Security/Eval:
+  Enabled: true
+
 ########################################
 # Lint Cops
-
-Lint/Eval:
-  Enabled: true
 
 Lint/AssignmentInCondition:
   Enabled: false
@@ -80,12 +136,23 @@ Lint/AssignmentInCondition:
 ########################################
 # Metrics Cops
 
-Metrics/LineLength:
-  Max: 110
-
 Metrics/MethodLength:
   CountComments: false # count full line comments?
   Max: 20
 
 Metrics/ClassLength:
   Max: 120
+
+Metrics/AbcSize:
+  Max: 20
+
+Metrics/BlockLength:
+  Enabled: true
+  Exclude:
+    - spec/**/*
+
+########################################
+# Bundler Cops
+
+Bundler/OrderedGems:
+  Enabled: false

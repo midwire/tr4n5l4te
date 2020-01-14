@@ -1,4 +1,6 @@
-$LOAD_PATH.unshift File.expand_path('../../lib', __FILE__)
+# frozen_string_literal: true
+
+$LOAD_PATH.unshift File.expand_path('../lib', __dir__)
 
 if ENV['COVERAGE']
   require 'simplecov'
@@ -18,7 +20,7 @@ end
 require 'pry-nav'
 require 'tr4n5l4te'
 
-Dir[Tr4n5l4te.root.join('spec/support/**/*.rb')].each { |f| require f }
+Dir[Tr4n5l4te.root.join('spec/support/**/*.rb')].sort.each { |f| require f }
 
 RSpec.configure do |config|
   config.mock_with :rspec
