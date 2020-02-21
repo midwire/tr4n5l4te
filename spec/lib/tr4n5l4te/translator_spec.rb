@@ -16,6 +16,10 @@ module Tr4n5l4te
           it 'translates another string' do
             expect(translator.translate('how are you', :en, :es)).to match(/cómo estás/i)
           end
+
+          it 'does not translate ambiguous words' do
+            expect(translator.translate('Friends', :en, :es)).to match(/Friends/)
+          end
         end
       end
     end

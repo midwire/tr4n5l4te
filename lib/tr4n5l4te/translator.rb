@@ -21,6 +21,11 @@ module Tr4n5l4te
       smart_visit(translator_url(encoded_text, from_lang, to_lang))
       result_box = browser.find('.tlid-translation')
       result_box.text
+    rescue Capybara::Ambiguous
+      all_translations = browser.find_all('.tlid-translation')
+      multiples = all_translations.collect(&:text)
+      puts("WARNING: '#{text}' has multiple translations: [#{multiples.join(', ')}]")
+      text
     end
 
     private
