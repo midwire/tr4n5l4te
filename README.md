@@ -1,6 +1,6 @@
 # Tr4n5l4te
 
-**Version: 0.1.7**
+**Version: 0.1.8**
 
 Use Google Translate without an API key.
 

@@ -1,3 +1,8 @@
+*0.1.8* (February 21, 2020)
+
+* Address ambiguous translations without stopping the run when the exception occurs.
+* Fixes issue #9
+
 *0.1.7* (January 14, 2020)
 
 * Remove midwire common String usage
