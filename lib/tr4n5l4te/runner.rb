@@ -4,6 +4,7 @@ require 'optimist'
 require 'colored'
 require 'fileutils'
 require 'midwire_common/string'
+require 'pry' unless ENV.fetch('GEM_ENV', nil).nil?
 
 module Tr4n5l4te
   class Runner
@@ -30,7 +31,7 @@ module Tr4n5l4te
 
       hash = YAML.load_file(options[:yaml_file])
       translated = process(hash)
-      store_translation(translated)
+      store_translation(replace_lang_key(translated))
 
       puts("Processed #{@count} strings in [#{Time.now - start_time}] seconds.".yellow)
     end
@@ -56,10 +57,19 @@ module Tr4n5l4te
     end
 
     def from_lang
-      md = File.basename(options[:yaml_file]).match(/^(\w\w)\.yml$/)
-      fail "Could not determine language from yaml file: '#{options[:yaml_file]}'" unless md
+      @from_lang ||= begin
+        md = File.basename(options[:yaml_file]).match(/^(\w\w)\.yml$/)
+        fail "Could not determine language from yaml file: '#{options[:yaml_file]}'" unless md
 
-      md[1]
+        md[1]
+      end
+    end
+
+    def replace_lang_key(translated)
+      assumed_source_lang = translated.keys.first
+      return translated unless assumed_source_lang == from_lang
+
+      { options[:lang] => translated.values.first }
     end
 
     def store_translation(translated)
