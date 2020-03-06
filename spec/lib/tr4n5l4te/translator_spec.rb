@@ -20,6 +20,20 @@ module Tr4n5l4te
           it 'does not translate ambiguous words' do
             expect(translator.translate('Friends', :en, :es)).to match(/Friends/)
           end
+
+          # rubocop:disable Style/FormatStringToken
+          it 'does not mangle interpolated text within tags' do
+            src = 'It looks like your timezone is <strong>%{zone_name}</strong>'
+            expected = 'Parece que su zona horaria es <strong> %{zone_name} </strong>'
+            expect(translator.translate(src, :en, :es)).to eq(expected)
+          end
+
+          it 'does not mangle interpolated text at the end' do
+            src = 'It looks like your timezone is %{zone_name}'
+            expected = 'Parece que tu zona horaria es %{zone_name}'
+            expect(translator.translate(src, :en, :es)).to eq(expected)
+          end
+          # rubocop:enable Style/FormatStringToken
         end
       end
     end
