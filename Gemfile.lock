@@ -5,7 +5,7 @@ PATH
       capybara (~> 2.6)
       colored (~> 1)
       midwire_common (~> 0.1)
-      optimist
+      optimist (~> 3.0)
       poltergeist (~> 1.9)
 
 GEM

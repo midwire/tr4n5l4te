@@ -20,7 +20,7 @@ module Tr4n5l4te
 
       smart_visit(translator_url(encoded_text, from_lang, to_lang))
       result_box = browser.find('.tlid-translation')
-      result_box.text
+      postprocess(result_box.text)
     rescue Capybara::Ambiguous
       all_translations = browser.find_all('.tlid-translation')
       multiples = all_translations.collect(&:text)
@@ -30,11 +30,28 @@ module Tr4n5l4te
 
     private
 
+    def preprocess(text)
+      @interpolations = text.scan(/(%{.*})/).flatten
+      @interpolations.each_with_index do |var, ndx|
+        stub = "VAR#{ndx}"
+        text.gsub!(%r{#{var}}, stub)
+      end
+      text
+    end
+
+    def postprocess(text)
+      @interpolations.each_with_index do |interp, ndx|
+        stub = /VAR#{ndx}/
+        text.gsub!(stub, interp)
+      end
+      text
+    end
+
     def validate_and_encode(text)
       return '' if text.nil?
       fail "Cannot translate a [#{text.class}]: '#{text}'" unless text.respond_to?(:gsub)
 
-      CGI.escape(text.strip)
+      CGI.escape(preprocess(text.strip))
     end
 
     def smart_visit(url)
