@@ -22,7 +22,7 @@ module Tr4n5l4te
           end
 
           # rubocop:disable Style/FormatStringToken
-          it 'does not mangle interpolated text within tags', focus: true do
+          it 'does not mangle interpolated text within tags' do
             src = 'It looks like your timezone is <strong>%{zone_name}</strong>'
             expected = 'Parece que su zona horaria es <strong> %{zone_name} </strong>'
             expect(translator.translate(src, :en, :es)).to eq(expected)

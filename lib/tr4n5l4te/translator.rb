@@ -14,7 +14,6 @@ module Tr4n5l4te
     end
 
     def translate(text, from_lang, to_lang)
-      puts "Translating: #{text}"
       encoded_text = validate_and_encode(text)
       return '' if encoded_text == ''
 

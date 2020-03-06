@@ -48,7 +48,7 @@ module Tr4n5l4te
 
     def translate(string)
       @count += 1
-      puts("[#{string}]") if options[:verbose]
+      puts("Translating [#{string}]") if options[:verbose]
       translator.translate(string, from_lang, options[:lang])
     end
 
