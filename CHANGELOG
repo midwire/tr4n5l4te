@@ -1,3 +1,8 @@
+*0.1.9* (March 05, 2020)
+
+* The top-level primary language key was being propagated from the source .yml file to the translated target .yml file.  That is now fixed.
+* Now keeps the interpolation tags intact.
+
 *0.1.8* (February 21, 2020)
 
 * Address ambiguous translations without stopping the run when the exception occurs.
