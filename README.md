@@ -65,7 +65,7 @@ Warning: If you pass in '0' and translate a large file, it is very likely that G
 
 To list all known languages
 
-    $ ./exe/translate -t
+    $ ./exe/translate --list
 
 ## Development
 
