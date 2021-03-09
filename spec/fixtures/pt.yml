@@ -1,0 +1,17 @@
+---
+pt:
+  time_zone_detected: Parece que seu fuso horário é <strong> %{zone_name}</strong>. You can change it in your <a href='%{profile_path} '> configurações de perfil </a>.
+  integer_test: Existem 7 dias em uma semana e 365 dias em um ano.
+  another_int_test: 'preço: 250'
+  help:
+    public_link: Link público a ser enviado ao cliente para que ele mesmo preencha os detalhes
+    logo_image: Este logotipo será exibido no formulário de detalhes de contato que você enviar aos seus clientes.
+    active_tasks: 'Cada cliente tem uma tarefa atual: tarefa incompleta com a data de vencimento mais próxima'
+    workflow_type_shoot: Útil para fotos de casamento e retrato - suas tarefas têm prazos após a data do livro e antes e depois da data da foto
+    workflow_type_product: Útil para pedidos de álbuns ou impressões - as tarefas podem ter datas de vencimento após a data do pedido
+    referrals:
+      custom_description: Salve sua própria descrição de um fotógrafo, alterando-a uma vez
+      incoming:
+        custom_description: Descrição personalizada que seu colega forneceu para você
+    workflows:
+      email_template: ''

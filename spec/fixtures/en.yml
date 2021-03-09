@@ -1,5 +1,7 @@
 en:
   time_zone_detected: "It looks like your timezone is <strong>%{zone_name}</strong>. You can change it in your <a href='%{profile_path}'>profile settings</a>."
+  integer_test: "There are 7 days in a week and 365 days in a year."
+  another_int_test: "price: 250"
 
   help:
     public_link:  "Public link to send to client to have them fill out their details themselves"

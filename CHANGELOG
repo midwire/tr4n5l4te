@@ -1,3 +1,7 @@
+*0.1.10* (March 09, 2021)
+
+* Accomodate latest changes to the web interface.
+
 *0.1.9* (March 05, 2020)
 
 * The top-level primary language key was being propagated from the source .yml file to the translated target .yml file.  That is now fixed.
