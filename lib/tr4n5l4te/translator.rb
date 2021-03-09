@@ -40,7 +40,7 @@ module Tr4n5l4te
 
     def postprocess(text)
       @interpolations.each_with_index do |interp, ndx|
-        stub = /VAR#{ndx}/
+        stub = /VAR#{ndx}/i
         text.gsub!(stub, interp)
       end
       text
