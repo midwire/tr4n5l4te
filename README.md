@@ -30,10 +30,10 @@ In your code:
 
 ```ruby
 translator = Tr4n5l4te::Translator.new
-english_strings = %w(
-  hello
-  how are you
-)
+english_strings = [
+  'hello'
+  'how are you'
+]
 english_strings.each do |text|
   puts translator.translate(text, :en, :es)
 end
