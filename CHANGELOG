@@ -1,3 +1,7 @@
+*0.1.11* (March 09, 2021)
+
+* Disregard case when using variable interpolation.
+
 *0.1.10* (March 09, 2021)
 
 * Accomodate latest changes to the web interface.
