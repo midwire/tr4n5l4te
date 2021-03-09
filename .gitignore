@@ -9,3 +9,5 @@
 test.html
 /vendor
 /stubs
+/node_modules/
+yarn.lock
