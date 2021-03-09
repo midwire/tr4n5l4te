@@ -21,7 +21,7 @@ module Tr4n5l4te
             expect(translator.translate('Friends', :en, :es)).to match(/Friends/)
           end
 
-          it 'handles static numbers', focus: true do
+          it 'handles static numbers' do
             expect(
               translator.translate('translating a number: 250', :en, :es)
             ).to match(/^traduciendo un número: 250$/)
