@@ -1,3 +1,7 @@
+*0.1.12* (March 11, 2021)
+
+* Dump console message into oblivion, do we don't see stupid warning messages like "Using this console may allow attackers to impersonate you and steal your information using an attack called Self-XSS"
+
 *0.1.11* (March 09, 2021)
 
 * Disregard case when using variable interpolation.
