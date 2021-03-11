@@ -31,7 +31,7 @@ In your code:
 ```ruby
 translator = Tr4n5l4te::Translator.new
 english_strings = [
-  'hello'
+  'hello',
   'how are you'
 ]
 english_strings.each do |text|
