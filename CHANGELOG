@@ -1,3 +1,7 @@
+*0.1.13* (April 30, 2021)
+
+* Upgrade rexml from 3.2.4 to 3.2.5 to fix a CVE
+
 *0.1.12* (March 11, 2021)
 
 * Dump console message into oblivion, do we don't see stupid warning messages like "Using this console may allow attackers to impersonate you and steal your information using an attack called Self-XSS"
