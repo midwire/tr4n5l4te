@@ -20,11 +20,22 @@ module Tr4n5l4te
       smart_visit(translator_url(encoded_text, from_lang, to_lang))
       result_box = browser.find('.JLqJ4b.ChMk0b > span:first-child')
       postprocess(result_box.text)
+
     rescue Capybara::Ambiguous
       all_translations = browser.find_all('.JLqJ4b.ChMk0b > span:first-child')
       multiples = all_translations.collect(&:text)
       puts("WARNING: '#{text}' has multiple translations: [#{multiples.join(', ')}]")
       text
+
+    rescue Capybara::ElementNotFound
+      all_translations = browser.find_all('.J0lOec > span:first-child')
+      multiples = all_translations.collect(&:text)
+      if multiples.any?
+        puts("WARNING: '#{text}' has gender translations: [#{multiples.join(', ')}]")
+        postprocess(multiples.last) # take the male form
+      else
+        puts("WARNING: Could not find a translation for '#{text}'")
+      end
     end
 
     private
