@@ -1,3 +1,9 @@
+*0.1.14* (June 07, 2021)
+
+* Add workaround for phantomjs SSL handshake problem, issue #24 - SSL handshake failed, by @gahia - see also: "https://github.com/ariya/phantomjs/issues/12440"
+* Look for and report non-neutral gender translations. Now accepts the "male" translation by default and warns that there are alternatives, by @gahia.
+* Don't fail if a translation is not found but instead show a warning message and continue, by @gahia.
+
 *0.1.13* (April 30, 2021)
 
 * Upgrade rexml from 3.2.4 to 3.2.5 to fix a CVE
