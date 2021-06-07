@@ -10,7 +10,7 @@ module Tr4n5l4te
       app,
       js_errors: false,
       timeout: Tr4n5l4te.configuration.timeout,
-      phantomjs_options: ['--load-images=no', '--ignore-ssl-errors=yes', '--web-security=false'],
+      phantomjs_options: ['--load-images=no', '--ignore-ssl-errors=yes', '--web-security=false', '--ssl-protocol=any'],
       phantomjs_logger: StringIO.new,
       logger: StringIO.new
     )
