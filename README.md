@@ -93,6 +93,7 @@ Bug reports and pull requests are welcome on GitHub at https://github.com/midwir
 Thanks to all of those who contribute!
 
 * @kirylpl - Fixed phantomjs selector, migration to Optimist gem
+* @gahia - Fixed phantomjs SSL handshake problem, Look for and report non-neutral gender translations. Now accepts the "male" translation by default and warns that there are alternatives, Don't fail if a translation is not found but instead show a warning message and continue.
 
 ## License
 
