@@ -1,3 +1,7 @@
+*0.1.15* (September 06, 2022)
+
+* Upgrade Rack and Nokogiri
+
 *0.1.14* (June 07, 2021)
 
 * Add workaround for phantomjs SSL handshake problem, issue #24 - SSL handshake failed, by @gahia - see also: "https://github.com/ariya/phantomjs/issues/12440"
