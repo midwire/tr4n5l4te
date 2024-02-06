@@ -1,3 +1,7 @@
+*0.1.17* (February 06, 2024)
+
+* Upgrade Nokogiri
+
 *0.1.16* (October 21, 2022)
 
 * Upgrade Nokogiri to 1.13.9
