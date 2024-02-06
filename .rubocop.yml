@@ -1,5 +1,10 @@
+require:
+  - rubocop-factory_bot
+  - rubocop-rspec
+  - rubocop-rails
+
 AllCops:
-  TargetRubyVersion: 2.4
+  TargetRubyVersion: 3.2
 
   Include:
     - '**/*.gemspec'
@@ -24,11 +29,12 @@ AllCops:
     - 'bin/**/*'
     - 'node_modules/**/*'
     - 'features/step_definitions/*'
-    - 'config/deploy.rb'
-    - 'config/deploy/**/*.rb'
+    - 'app/views/**/*.jbuilder'
+
+  NewCops: enable
 
 # Checks formatting of special comments
-CommentAnnotation:
+Style/CommentAnnotation:
   Keywords:
     - TODO
     - FIXME
@@ -96,13 +102,25 @@ Layout/ParameterAlignment:
 Layout/ArgumentAlignment:
   EnforcedStyle: with_fixed_indentation
 
+Layout/HashAlignment:
+  Enabled: false
+  EnforcedColonStyle: key
+  EnforcedHashRocketStyle: table
+
 Layout/AssignmentIndentation:
   Enabled: false
 
 Layout/EmptyLinesAroundBlockBody:
   Enabled: false
 
+Layout/EmptyLinesAroundClassBody:
+  Enabled: false
+
 Layout/MultilineMethodCallIndentation:
+  EnforcedStyle: indented
+  IndentationWidth: 4
+
+Layout/MultilineOperationIndentation:
   EnforcedStyle: indented
   IndentationWidth: 4
 
@@ -150,9 +168,113 @@ Metrics/BlockLength:
   Enabled: true
   Exclude:
     - spec/**/*
+    - lib/tasks/**/*.rake
+    - config/routes.rb
+    - config/environments/*.rb
+
+########################################
+# Rspec Cops
+
+RSpec/MultipleExpectations:
+  Enabled: false
+
+RSpec/IndexedLet:
+  Enabled: false
+
+RSpec/MultipleMemoizedHelpers:
+  Enabled: false
+
+RSpec/ExampleLength:
+  Enabled: false
+
+RSpec/ContextWording:
+  Enabled: false
+
+RSpec/NestedGroups:
+  Enabled: false
+
+RSpec/AnyInstance:
+  Enabled: false
+
+
+########################################
+# Rails Cops
+
+Rails/I18nLocaleTexts:
+  Enabled: false
 
 ########################################
 # Bundler Cops
 
 Bundler/OrderedGems:
   Enabled: false
+
+########################################
+# New Cops
+
+Lint/DuplicateBranch: # (new in 1.3)
+  Enabled: true
+Lint/DuplicateRegexpCharacterClassElement: # (new in 1.1)
+  Enabled: true
+Lint/EmptyBlock: # (new in 1.1)
+  Enabled: true
+Lint/EmptyClass: # (new in 1.3)
+  Enabled: true
+Lint/NoReturnInBeginEndBlocks: # (new in 1.2)
+  Enabled: true
+Lint/ToEnumArguments: # (new in 1.1)
+  Enabled: true
+Lint/UnmodifiedReduceAccumulator: # (new in 1.1)
+  Enabled: true
+Style/ArgumentsForwarding: # (new in 1.1)
+  Enabled: true
+Style/CollectionCompact: # (new in 1.2)
+  Enabled: true
+Style/DocumentDynamicEvalDefinition: # (new in 1.1)
+  Enabled: true
+Style/NegatedIfElseCondition: # (new in 1.2)
+  Enabled: true
+Style/NilLambda: # (new in 1.3)
+  Enabled: true
+Style/SwapValues: # (new in 1.1)
+  Enabled: true
+Layout/SpaceBeforeBrackets: # (new in 1.7)
+  Enabled: true
+Lint/AmbiguousAssignment: # (new in 1.7)
+  Enabled: true
+Lint/DeprecatedConstants: # (new in 1.8)
+  Enabled: true
+Lint/LambdaWithoutLiteralBlock: # (new in 1.8)
+  Enabled: true
+Lint/NumberedParameterAssignment: # (new in 1.9)
+  Enabled: true
+Lint/OrAssignmentToConstant: # (new in 1.9)
+  Enabled: true
+Lint/RedundantDirGlobSort: # (new in 1.8)
+  Enabled: true
+Lint/SymbolConversion: # (new in 1.9)
+  Enabled: true
+Lint/TripleQuotes: # (new in 1.9)
+  Enabled: true
+Lint/UnexpectedBlockArity: # (new in 1.5)
+  Enabled: true
+Style/EndlessMethod: # (new in 1.8)
+  Enabled: true
+Style/HashConversion: # (new in 1.10)
+  Enabled: true
+Style/HashExcept: # (new in 1.7)
+  Enabled: true
+Style/IfWithBooleanLiteralBranches: # (new in 1.9)
+  Enabled: true
+Style/RedundantArgument: # (new in 1.4)
+  Enabled: true
+Style/StringChars: # (new in 1.12)
+  Enabled: true
+Lint/EmptyInPattern: # (new in 1.16)
+  Enabled: true
+Style/InPatternThen: # (new in 1.16)
+  Enabled: true
+Style/MultilineInPatternThen: # (new in 1.16)
+  Enabled: true
+Style/QuotedSymbols: # (new in 1.16)
+  Enabled: true
