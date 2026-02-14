@@ -1,3 +1,16 @@
+*1.0.0* (February 14, 2026)
+
+* Replace PhantomJS/Poltergeist with direct HTTP translation via Google's undocumented translate endpoint
+* Delete Agent class and all cookie/browser infrastructure
+* Remove capybara and poltergeist gem dependencies (net/http, json, uri are stdlib)
+* Rewrite Translator to use Net::HTTP POST to translate.googleapis.com
+* Add error handling that returns original text on translation failure
+* Interpolation variable preservation (%{var}) still works as before
+* Move development dependencies from gemspec to Gemfile
+* Add required_ruby_version >= 3.2 to gemspec
+* Remove rubocop-rails and rubocop-factory_bot from linter config
+* Fix all rubocop offenses
+
 *0.1.17* (February 06, 2024)
 
 * Upgrade Nokogiri
