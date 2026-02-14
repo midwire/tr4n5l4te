@@ -32,22 +32,24 @@ module Tr4n5l4te
       uri = URI(API_URL)
       params = { client: 'gtx', dt: 't', sl: from_lang.to_s, tl: to_lang.to_s, q: text }
 
-      http = Net::HTTP.new(uri.host, uri.port)
-      http.use_ssl = true
-      http.open_timeout = Tr4n5l4te.configuration.timeout
-      http.read_timeout = Tr4n5l4te.configuration.timeout
-
       request = Net::HTTP::Post.new(uri.path)
       request.set_form_data(params)
 
-      response = http.request(request)
+      response = build_http(uri).request(request)
       sleep_default
 
-      unless response.is_a?(Net::HTTPSuccess)
-        raise Net::HTTPError.new("HTTP #{response.code}", response)
-      end
+      fail Net::HTTPError.new("HTTP #{response.code}", response) unless response.is_a?(Net::HTTPSuccess)
 
       response.body
+    end
+
+    def build_http(uri)
+      timeout = Tr4n5l4te.configuration.timeout
+      http = Net::HTTP.new(uri.host, uri.port)
+      http.use_ssl = true
+      http.open_timeout = timeout
+      http.read_timeout = timeout
+      http
     end
 
     def extract_translation(body)
@@ -74,7 +76,7 @@ module Tr4n5l4te
 
     def validate_and_encode(text)
       return '' if text.nil?
-      raise "Cannot translate a [#{text.class}]: '#{text}'" unless text.respond_to?(:gsub)
+      fail "Cannot translate a [#{text.class}]: '#{text}'" unless text.respond_to?(:gsub)
 
       result = text.strip
       return '' if result.empty?

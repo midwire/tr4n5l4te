@@ -18,7 +18,7 @@ RSpec.describe Tr4n5l4te do
 
   describe '.home_directory' do
     it "returns ENV['HOME']" do
-      expect(described_class.home_directory).to eq(ENV.fetch('HOME'))
+      expect(described_class.home_directory).to eq(Dir.home)
     end
   end
 

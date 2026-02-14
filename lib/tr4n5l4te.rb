@@ -18,7 +18,7 @@ module Tr4n5l4te
     end
 
     def home_directory
-      ENV.fetch('HOME')
+      Dir.home
     end
 
     def configure
@@ -33,4 +33,4 @@ module Tr4n5l4te
   autoload :Translator,     'tr4n5l4te/translator'
 end
 
-Tr4n5l4te.configure {}
+Tr4n5l4te.configuration = Tr4n5l4te::Configuration.new

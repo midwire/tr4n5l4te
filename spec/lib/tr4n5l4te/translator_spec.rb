@@ -9,9 +9,9 @@ module Tr4n5l4te
     # Sample JSON response from Google Translate API
     let(:success_body) do
       JSON.generate([
-        [['hola', 'hello', nil, nil, 10]],
-        nil, 'en'
-      ])
+                      [['hola', 'hello', nil, nil, 10]],
+                      nil, 'en'
+                    ])
     end
 
     let(:mock_response) do
@@ -31,7 +31,7 @@ module Tr4n5l4te
 
         before { allow(translator).to receive(:sleep) }
 
-        context '.translate' do
+        describe '.translate' do
           it 'translates a string' do
             expect(translator.translate('hello', :en, :es)).to match(/hola/i)
           end
@@ -57,7 +57,7 @@ module Tr4n5l4te
       end
     end
 
-    context '#new' do
+    describe '#new' do
       it 'returns the proper thing' do
         expect(translator).to be_a(described_class)
       end
@@ -72,7 +72,7 @@ module Tr4n5l4te
       end
     end
 
-    context '.translate' do
+    describe '.translate' do
       context 'with invalid text' do
         it 'returns an empty string if the argument is empty' do
           expect(translator.translate('', :en, :es)).to eq('')
@@ -106,7 +106,7 @@ module Tr4n5l4te
         # rubocop:disable Style/FormatStringToken
         it 'preserves %{var} through translation' do
           body = JSON.generate([[['hola VAR0', 'hello VAR0']]])
-          response = instance_double(Net::HTTPSuccess, body: body)
+          response = instance_double(Net::HTTPSuccess, body:)
           allow(response).to receive(:is_a?).with(Net::HTTPSuccess).and_return(true)
           allow_any_instance_of(Net::HTTP).to receive(:request).and_return(response)
 
@@ -116,7 +116,7 @@ module Tr4n5l4te
 
         it 'preserves multiple %{var} interpolations' do
           body = JSON.generate([[['hola VAR0 bienvenido a VAR1', 'hello VAR0 welcome to VAR1']]])
-          response = instance_double(Net::HTTPSuccess, body: body)
+          response = instance_double(Net::HTTPSuccess, body:)
           allow(response).to receive(:is_a?).with(Net::HTTPSuccess).and_return(true)
           allow_any_instance_of(Net::HTTP).to receive(:request).and_return(response)
 
@@ -129,12 +129,12 @@ module Tr4n5l4te
       context 'with multi-segment response' do
         it 'joins segments from long text' do
           body = JSON.generate([
-            [
-              ['primera parte ', 'first part '],
-              ['segunda parte', 'second part']
-            ]
-          ])
-          response = instance_double(Net::HTTPSuccess, body: body)
+                                 [
+                                   ['primera parte ', 'first part '],
+                                   ['segunda parte', 'second part']
+                                 ]
+                               ])
+          response = instance_double(Net::HTTPSuccess, body:)
           allow(response).to receive(:is_a?).with(Net::HTTPSuccess).and_return(true)
           allow_any_instance_of(Net::HTTP).to receive(:request).and_return(response)
 
@@ -146,7 +146,7 @@ module Tr4n5l4te
       context 'error handling' do
         it 'returns original text on HTTP error' do
           allow_any_instance_of(Net::HTTP).to receive(:request)
-            .and_raise(Net::HTTPError.new('500', nil))
+              .and_raise(Net::HTTPError.new('500', nil))
 
           expect do
             result = translator.translate('hello', 'en', 'es')
@@ -167,7 +167,7 @@ module Tr4n5l4te
 
         it 'returns original text on connection error' do
           allow_any_instance_of(Net::HTTP).to receive(:request)
-            .and_raise(SocketError.new('Connection refused'))
+              .and_raise(SocketError.new('Connection refused'))
 
           expect do
             result = translator.translate('hello', 'en', 'es')

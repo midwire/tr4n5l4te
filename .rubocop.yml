@@ -1,8 +1,3 @@
-require:
-  - rubocop-factory_bot
-  - rubocop-rspec
-  - rubocop-rails
-
 AllCops:
   TargetRubyVersion: 3.2
 
@@ -161,6 +156,10 @@ Metrics/MethodLength:
 Metrics/ClassLength:
   Max: 120
 
+Metrics/ModuleLength:
+  Exclude:
+    - spec/**/*
+
 Metrics/AbcSize:
   Max: 20
 
@@ -171,37 +170,6 @@ Metrics/BlockLength:
     - lib/tasks/**/*.rake
     - config/routes.rb
     - config/environments/*.rb
-
-########################################
-# Rspec Cops
-
-RSpec/MultipleExpectations:
-  Enabled: false
-
-RSpec/IndexedLet:
-  Enabled: false
-
-RSpec/MultipleMemoizedHelpers:
-  Enabled: false
-
-RSpec/ExampleLength:
-  Enabled: false
-
-RSpec/ContextWording:
-  Enabled: false
-
-RSpec/NestedGroups:
-  Enabled: false
-
-RSpec/AnyInstance:
-  Enabled: false
-
-
-########################################
-# Rails Cops
-
-Rails/I18nLocaleTexts:
-  Enabled: false
 
 ########################################
 # Bundler Cops

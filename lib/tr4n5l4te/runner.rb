@@ -76,7 +76,7 @@ module Tr4n5l4te
       data = translated.to_yaml(line_width: -1)
       dir = File.dirname(options[:yaml_file])
       base = File.basename(options[:yaml_file]).gsub(/#{from_lang}\.yml$/, '')
-      File.open(File.join(dir, "#{base}#{options[:lang]}.yml"), 'w') { |f| f.write(data) }
+      File.write(File.join(dir, "#{base}#{options[:lang]}.yml"), data)
     end
 
     # rubocop:disable Metrics/MethodLength
@@ -121,17 +121,17 @@ module Tr4n5l4te
     # rubocop:disable Metrics/AbcSize
     def validate_args
       if options[:list]
-        puts('Valid languages:'.yellow + "\n\n")
-        puts(Language.list.join(', ').yellow + "\n\n")
+        puts("#{'Valid languages:'.yellow}\n\n")
+        puts("#{Language.list.join(', ').yellow}\n\n")
         exit
       end
       if !options[:lang_given] || !Language.valid?(options[:lang])
-        puts('Valid languages:'.red + "\n\n")
-        puts(Language.list.join(', ').yellow + "\n\n")
+        puts("#{'Valid languages:'.red}\n\n")
+        puts("#{Language.list.join(', ').yellow}\n\n")
         Optimist.die(:lang, "'#{options[:lang]}' language unknown".red)
       end
       if !options[:yaml_file_given] || !File.exist?(options[:yaml_file])
-        puts('A YAML file is required:'.red + "\n\n")
+        puts("#{'A YAML file is required:'.red}\n\n")
         Optimist.die(:yaml_file, "'#{options[:yaml_file]}' not found".red)
       end
       options[:lang] = Language.ensure_code(options[:lang])

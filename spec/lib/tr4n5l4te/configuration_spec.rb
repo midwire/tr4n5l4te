@@ -4,14 +4,14 @@ require 'spec_helper'
 
 module Tr4n5l4te
   RSpec.describe Configuration do
-    context '#new' do
+    describe '#new' do
       it 'has a default timeout of 30' do
-        config = Configuration.new
+        config = described_class.new
         expect(config.timeout).to eq(30)
       end
     end
 
-    context '#timeout=' do
+    describe '#timeout=' do
       it 'can set the value' do
         Tr4n5l4te.configure do |config|
           config.timeout = 60
@@ -22,7 +22,7 @@ module Tr4n5l4te
 
     context 'standalone instance' do
       it 'supports timeout getter and setter' do
-        config = Configuration.new
+        config = described_class.new
         config.timeout = 45
         expect(config.timeout).to eq(45)
       end
