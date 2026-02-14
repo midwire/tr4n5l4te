@@ -11,3 +11,6 @@ test.html
 /stubs
 /node_modules/
 yarn.lock
+.claude/
+CLAUDE.md
+spec/fixtures/es.yml
