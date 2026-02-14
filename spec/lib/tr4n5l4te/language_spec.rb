@@ -76,6 +76,10 @@ module Tr4n5l4te
         expect(described_class.ensure_code('English')).to eq('en')
         expect(described_class.ensure_code('Yiddish')).to eq('yi')
       end
+
+      it 'raises RuntimeError for invalid language' do
+        expect { described_class.ensure_code('l33t') }.to raise_error(RuntimeError, /Invalid language/)
+      end
     end
   end
 end
