@@ -16,32 +16,9 @@ RSpec.describe Tr4n5l4te do
     end
   end
 
-  describe '.default_config_directory' do
-    it "returns '.tr4n5l4te'" do
-      expect(described_class.default_config_directory).to eq('.tr4n5l4te')
-    end
-  end
-
-  describe '.default_cookie_filename' do
-    it "returns 'cookies.yml'" do
-      expect(described_class.default_cookie_filename).to eq('cookies.yml')
-    end
-  end
-
   describe '.home_directory' do
     it "returns ENV['HOME']" do
       expect(described_class.home_directory).to eq(ENV.fetch('HOME'))
-    end
-  end
-
-  describe '.cookie_file' do
-    it 'returns a path under ~/.tr4n5l4te/' do
-      expect(described_class.cookie_file).to include('.tr4n5l4te')
-    end
-
-    it 'creates the directory and file' do
-      file = described_class.cookie_file
-      expect(File.exist?(file)).to eq(true)
     end
   end
 

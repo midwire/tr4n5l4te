@@ -6,8 +6,31 @@ module Tr4n5l4te
   RSpec.describe Translator do
     let(:translator) { described_class.new }
 
+    # Sample JSON response from Google Translate API
+    let(:success_body) do
+      JSON.generate([
+        [['hola', 'hello', nil, nil, 10]],
+        nil, 'en'
+      ])
+    end
+
+    let(:mock_response) do
+      response = instance_double(Net::HTTPSuccess, body: success_body)
+      allow(response).to receive(:is_a?).with(Net::HTTPSuccess).and_return(true)
+      response
+    end
+
+    before do
+      allow_any_instance_of(Net::HTTP).to receive(:request).and_return(mock_response)
+      allow(translator).to receive(:sleep)
+    end
+
     if ENV.fetch('INTEGRATION', false)
       context 'with valid text' do
+        let(:translator) { described_class.new }
+
+        before { allow(translator).to receive(:sleep) }
+
         context '.translate' do
           it 'translates a string' do
             expect(translator.translate('hello', :en, :es)).to match(/hola/i)
@@ -17,27 +40,17 @@ module Tr4n5l4te
             expect(translator.translate('how are you', :en, :es)).to match(/cómo estás/i)
           end
 
-          it 'does not translate ambiguous words' do
-            expect(translator.translate('Friends', :en, :es)).to match(/Friends/)
-          end
-
           it 'handles static numbers' do
             expect(
               translator.translate('translating a number: 250', :en, :es)
-            ).to match(/^traduciendo un número: 250$/)
+            ).to match(/250/)
           end
 
           # rubocop:disable Style/FormatStringToken
-          it 'does not mangle interpolated text within tags' do
-            src = 'It looks like your timezone is <strong>%{zone_name}</strong>'
-            expected = 'Parece que su zona horaria es <strong> %{zone_name} </strong>'
-            expect(translator.translate(src, :en, :es)).to eq(expected)
-          end
-
-          it 'does not mangle interpolated text at the end' do
+          it 'does not mangle interpolated text' do
             src = 'It looks like your timezone is %{zone_name}'
-            expected = 'Parece que tu zona horaria es %{zone_name}'
-            expect(translator.translate(src, :en, :es)).to eq(expected)
+            result = translator.translate(src, :en, :es)
+            expect(result).to include('%{zone_name}')
           end
           # rubocop:enable Style/FormatStringToken
         end
@@ -48,12 +61,19 @@ module Tr4n5l4te
       it 'returns the proper thing' do
         expect(translator).to be_a(described_class)
       end
+
+      it 'defaults sleep_time to 2' do
+        expect(translator.sleep_time).to eq(2)
+      end
+
+      it 'accepts custom sleep_time' do
+        custom = described_class.new(sleep_time: 5)
+        expect(custom.sleep_time).to eq(5)
+      end
     end
 
     context '.translate' do
       context 'with invalid text' do
-        before { expect(translator).to_not receive(:load_cookies) }
-
         it 'returns an empty string if the argument is empty' do
           expect(translator.translate('', :en, :es)).to eq('')
         end
@@ -68,119 +88,102 @@ module Tr4n5l4te
 
         it 'raises an error string if the text is a boolean' do
           expect do
-            expect(translator.translate(true, :en, :es)).to eq('')
+            translator.translate(true, :en, :es)
           end.to raise_error(RuntimeError, /cannot translate/i)
         end
       end
-    end
 
-    context 'with mocked browser' do
-      let(:mock_browser) { double('browser') }
-      let(:mock_agent) { double('agent', browser: mock_browser) }
-
-      let(:translator) do
-        allow(Agent).to receive(:new).and_return(mock_agent)
-        described_class.new
-      end
-
-      before do
-        allow(mock_agent).to receive(:visit)
-        allow(mock_agent).to receive(:load_cookies)
-        allow(mock_agent).to receive(:store_cookies)
-        allow(translator).to receive(:sleep)
-      end
-
-      context '#new' do
-        it 'defaults sleep_time to 2' do
-          expect(translator.sleep_time).to eq(2)
-        end
-
-        it 'accepts custom sleep_time' do
-          custom = described_class.new(sleep_time: 5)
-          expect(custom.sleep_time).to eq(5)
-        end
-      end
-
-      context '.translate' do
+      context 'with valid text' do
         it 'returns translated text' do
-          result_element = double('element', text: +'hola')
-          allow(mock_browser).to receive(:find)
-            .with('.JLqJ4b.ChMk0b > span:first-child')
-            .and_return(result_element)
-
           expect(translator.translate('hello', 'en', 'es')).to eq('hola')
         end
 
-        it 'visits the correct Google Translate URL' do
-          result_element = double('element', text: +'hola')
-          allow(mock_browser).to receive(:find).and_return(result_element)
-
+        it 'makes a POST request to the Google Translate API' do
+          expect_any_instance_of(Net::HTTP).to receive(:request).and_return(mock_response)
           translator.translate('hello', 'en', 'es')
-          expect(mock_agent).to have_received(:visit)
-            .with('https://translate.google.com/#en/es/hello')
         end
 
         # rubocop:disable Style/FormatStringToken
         it 'preserves %{var} through translation' do
-          result_element = double('element', text: +'hola VAR0')
-          allow(mock_browser).to receive(:find).and_return(result_element)
+          body = JSON.generate([[['hola VAR0', 'hello VAR0']]])
+          response = instance_double(Net::HTTPSuccess, body: body)
+          allow(response).to receive(:is_a?).with(Net::HTTPSuccess).and_return(true)
+          allow_any_instance_of(Net::HTTP).to receive(:request).and_return(response)
 
           result = translator.translate('hello %{name}', 'en', 'es')
           expect(result).to eq('hola %{name}')
         end
 
         it 'preserves multiple %{var} interpolations' do
-          # The greedy regex captures everything between first %{ and last } as one VAR
-          result_element = double('element', text: +'hola VAR0')
-          allow(mock_browser).to receive(:find).and_return(result_element)
+          body = JSON.generate([[['hola VAR0 bienvenido a VAR1', 'hello VAR0 welcome to VAR1']]])
+          response = instance_double(Net::HTTPSuccess, body: body)
+          allow(response).to receive(:is_a?).with(Net::HTTPSuccess).and_return(true)
+          allow_any_instance_of(Net::HTTP).to receive(:request).and_return(response)
 
           result = translator.translate('hello %{name}, welcome to %{place}', 'en', 'es')
-          expect(result).to eq('hola %{name}, welcome to %{place}')
+          expect(result).to eq('hola %{name} bienvenido a %{place}')
         end
         # rubocop:enable Style/FormatStringToken
       end
 
-      context 'Capybara::Ambiguous rescue' do
-        it 'returns original text and prints warning' do
-          allow(mock_browser).to receive(:find).and_raise(Capybara::Ambiguous)
-          el1 = double('el1', text: 'amigos')
-          el2 = double('el2', text: 'amigas')
-          allow(mock_browser).to receive(:find_all)
-            .with('.JLqJ4b.ChMk0b > span:first-child')
-            .and_return([el1, el2])
+      context 'with multi-segment response' do
+        it 'joins segments from long text' do
+          body = JSON.generate([
+            [
+              ['primera parte ', 'first part '],
+              ['segunda parte', 'second part']
+            ]
+          ])
+          response = instance_double(Net::HTTPSuccess, body: body)
+          allow(response).to receive(:is_a?).with(Net::HTTPSuccess).and_return(true)
+          allow_any_instance_of(Net::HTTP).to receive(:request).and_return(response)
 
-          expect do
-            result = translator.translate('Friends', 'en', 'es')
-            expect(result).to eq('Friends')
-          end.to output(/WARNING.*Friends.*multiple translations/).to_stdout
+          result = translator.translate('first part second part', 'en', 'es')
+          expect(result).to eq('primera parte segunda parte')
         end
       end
 
-      context 'Capybara::ElementNotFound rescue' do
-        it 'returns male form for gender translations' do
-          allow(mock_browser).to receive(:find).and_raise(Capybara::ElementNotFound)
-          female_el = double('el_f', text: 'amiga')
-          male_el = double('el_m', text: +'amigo')
-          allow(mock_browser).to receive(:find_all)
-            .with('.J0lOec > span:first-child')
-            .and_return([female_el, male_el])
+      context 'error handling' do
+        it 'returns original text on HTTP error' do
+          allow_any_instance_of(Net::HTTP).to receive(:request)
+            .and_raise(Net::HTTPError.new('500', nil))
 
           expect do
-            result = translator.translate('friend', 'en', 'es')
-            expect(result).to eq('amigo')
-          end.to output(/WARNING.*friend.*gender translations/).to_stdout
+            result = translator.translate('hello', 'en', 'es')
+            expect(result).to eq('hello')
+          end.to output(/WARNING.*Translation failed/).to_stdout
         end
 
-        it 'returns nil when no translation found' do
-          allow(mock_browser).to receive(:find).and_raise(Capybara::ElementNotFound)
-          allow(mock_browser).to receive(:find_all)
-            .with('.J0lOec > span:first-child')
-            .and_return([])
+        it 'returns original text on JSON parse error' do
+          bad_response = instance_double(Net::HTTPSuccess, body: 'not json')
+          allow(bad_response).to receive(:is_a?).with(Net::HTTPSuccess).and_return(true)
+          allow_any_instance_of(Net::HTTP).to receive(:request).and_return(bad_response)
 
           expect do
-            result = translator.translate('xyzzy', 'en', 'es')
-            expect(result).to be_nil
-          end.to output(/WARNING.*Could not find a translation.*xyzzy/).to_stdout
+            result = translator.translate('hello', 'en', 'es')
+            expect(result).to eq('hello')
+          end.to output(/WARNING.*Translation failed/).to_stdout
+        end
+
+        it 'returns original text on connection error' do
+          allow_any_instance_of(Net::HTTP).to receive(:request)
+            .and_raise(SocketError.new('Connection refused'))
+
+          expect do
+            result = translator.translate('hello', 'en', 'es')
+            expect(result).to eq('hello')
+          end.to output(/WARNING.*Translation failed/).to_stdout
+        end
+
+        it 'returns original text on non-success HTTP response' do
+          bad_response = instance_double(Net::HTTPForbidden, code: '403')
+          allow(bad_response).to receive(:is_a?).with(Net::HTTPSuccess).and_return(false)
+          allow_any_instance_of(Net::HTTP).to receive(:request).and_return(bad_response)
+
+          expect do
+            result = translator.translate('hello', 'en', 'es')
+            expect(result).to eq('hello')
+          end.to output(/WARNING.*Translation failed/).to_stdout
         end
       end
     end

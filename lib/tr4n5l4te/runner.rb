@@ -106,7 +106,7 @@ module Tr4n5l4te
         )
         opt(
           :timeout,
-          'Poltergeist timeout option - default 30',
+          'HTTP request timeout - default 30',
           type: :integer, default: 30, short: 't'
         )
         opt(
