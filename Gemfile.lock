@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    tr4n5l4te (1.0.0)
+    tr4n5l4te (1.1.0)
       colored (~> 1)
       midwire_common (~> 0.1)
       optimist (~> 3.0)

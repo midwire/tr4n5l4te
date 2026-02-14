@@ -1,14 +1,12 @@
 # Tr4n5l4te
 
-**Version: 0.1.17**
+**Version: 1.0.0**
 
 Use Google Translate without an API key.
 
-Like me, maybe you've found that Google makes it a pain to work with their API. Tr4n5l4te gets around all that.
+Like me, maybe you've found that Google makes it a pain to work with their API. Tr4n5l4te gets around all that by using Google's free translation endpoint directly via HTTP — no browser, no API key, no headless dependencies.
 
 ## Installation
-
-First, install [PhantomJS](http://phantomjs.org/).
 
 Add this line to your application's Gemfile:
 
@@ -23,6 +21,8 @@ And then execute:
 Or install it yourself as:
 
     $ gem install tr4n5l4te
+
+Requires Ruby >= 3.2.
 
 ## Usage
 
@@ -41,6 +41,8 @@ end
 # => cómo estás
 ```
 
+Ruby string interpolation variables (`%{var}`) are preserved through translation.
+
 ### Command Line
 
     ➤ ./exe/translate -h
@@ -49,7 +51,7 @@ end
       -l, --lang=<s>          Destination language
       -i, --list              List known languages
       -s, --sleep-time=<i>    Sleep time (default: 2)
-      -t, --timeout=<i>       Poltergeist timeout option (default: 30)
+      -t, --timeout=<i>       HTTP request timeout (default: 30)
       -v, --verbose           Be verbose with output
       -h, --help              Show this message
 
@@ -66,6 +68,14 @@ Warning: If you pass in '0' and translate a large file, it is very likely that G
 To list all known languages
 
     $ ./exe/translate --list
+
+## Configuration
+
+```ruby
+Tr4n5l4te.configure do |config|
+  config.timeout = 60 # HTTP request timeout in seconds (default: 30)
+end
+```
 
 ## Development
 
