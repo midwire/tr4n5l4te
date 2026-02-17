@@ -1,3 +1,10 @@
+*1.1.0* (February 17, 2026)
+
+* Add proxy support for Net::HTTP requests (host:port or user:pass@host:port)
+* Add -p/--proxy CLI option
+* Add configurable proxy via Tr4n5l4te.configure
+* Update README with proxy documentation
+
 *1.0.0* (February 14, 2026)
 
 * Replace PhantomJS/Poltergeist with direct HTTP translation via Google's undocumented translate endpoint
