@@ -44,12 +44,20 @@ module Tr4n5l4te
     end
 
     def build_http(uri)
-      timeout = Tr4n5l4te.configuration.timeout
-      http = Net::HTTP.new(uri.host, uri.port)
+      config = Tr4n5l4te.configuration
+      http = create_http_client(uri, config.proxy)
       http.use_ssl = true
-      http.open_timeout = timeout
-      http.read_timeout = timeout
+      http.open_timeout = config.timeout
+      http.read_timeout = config.timeout
       http
+    end
+
+    def create_http_client(uri, proxy)
+      if proxy
+        Net::HTTP.new(uri.host, uri.port, proxy[:addr], proxy[:port], proxy[:user], proxy[:pass])
+      else
+        Net::HTTP.new(uri.host, uri.port)
+      end
     end
 
     def extract_translation(body)

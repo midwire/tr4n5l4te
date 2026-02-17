@@ -143,6 +143,57 @@ module Tr4n5l4te
         end
       end
 
+      context 'with proxy configured' do
+        before do
+          Tr4n5l4te.configure do |config|
+            config.proxy = { addr: '127.0.0.1', port: 8080 }
+          end
+        end
+
+        after do
+          Tr4n5l4te.configuration.proxy = nil
+        end
+
+        it 'passes proxy settings to Net::HTTP' do
+          expect(Net::HTTP).to receive(:new)
+            .with('translate.googleapis.com', 443, '127.0.0.1', 8080, nil, nil)
+            .and_call_original
+          translator.translate('hello', 'en', 'es')
+        end
+      end
+
+      context 'with authenticated proxy configured' do
+        before do
+          Tr4n5l4te.configure do |config|
+            config.proxy = { addr: '10.0.0.1', port: 3128, user: 'foo', pass: 'bar' }
+          end
+        end
+
+        after do
+          Tr4n5l4te.configuration.proxy = nil
+        end
+
+        it 'passes proxy credentials to Net::HTTP' do
+          expect(Net::HTTP).to receive(:new)
+            .with('translate.googleapis.com', 443, '10.0.0.1', 3128, 'foo', 'bar')
+            .and_call_original
+          translator.translate('hello', 'en', 'es')
+        end
+      end
+
+      context 'without proxy configured' do
+        before do
+          Tr4n5l4te.configuration.proxy = nil
+        end
+
+        it 'does not pass proxy settings to Net::HTTP' do
+          expect(Net::HTTP).to receive(:new)
+            .with('translate.googleapis.com', 443)
+            .and_call_original
+          translator.translate('hello', 'en', 'es')
+        end
+      end
+
       context 'error handling' do
         it 'returns original text on HTTP error' do
           allow_any_instance_of(Net::HTTP).to receive(:request)
