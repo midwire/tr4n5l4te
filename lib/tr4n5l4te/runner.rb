@@ -7,6 +7,7 @@ require 'midwire_common/string'
 require 'pry' unless ENV.fetch('GEM_ENV', nil).nil?
 
 module Tr4n5l4te
+  # rubocop:disable Metrics/ClassLength
   class Runner
     attr_accessor :logger, :options, :count
 
@@ -24,10 +25,7 @@ module Tr4n5l4te
       log_identifier(start_time)
       @count = 0
 
-      # configure
-      Tr4n5l4te.configure do |config|
-        config.timeout = options[:timeout]
-      end
+      apply_configuration
 
       hash = YAML.load_file(options[:yaml_file])
       translated = process(hash)
@@ -110,6 +108,11 @@ module Tr4n5l4te
           type: :integer, default: 30, short: 't'
         )
         opt(
+          :proxy,
+          'Proxy - host:port or user:pass@host:port',
+          type: :string, required: false, short: 'p'
+        )
+        opt(
           :verbose,
           'Be verbose with output',
           type: :boolean, required: false, short: 'v', default: false
@@ -138,9 +141,29 @@ module Tr4n5l4te
     end
     # rubocop:enable Metrics/AbcSize
 
+    def apply_configuration
+      Tr4n5l4te.configure do |config|
+        config.timeout = options[:timeout]
+        config.proxy = parse_proxy(options[:proxy]) if options[:proxy]
+      end
+    end
+
+    def parse_proxy(proxy_string)
+      if proxy_string.include?('@')
+        auth, host_port = proxy_string.split('@', 2)
+        user, pass = auth.split(':', 2)
+        addr, port = host_port.split(':', 2)
+        { addr:, port: port.to_i, user:, pass: }
+      else
+        addr, port = proxy_string.split(':', 2)
+        { addr:, port: port.to_i }
+      end
+    end
+
     def log_identifier(start_time)
       timestr = start_time.strftime('%H:%M:%S.%3N')
       puts("Starting Tr4n5l4te v#{Tr4n5l4te::VERSION} @#{timestr}".green)
     end
   end
+  # rubocop:enable Metrics/ClassLength
 end

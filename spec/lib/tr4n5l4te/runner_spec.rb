@@ -120,6 +120,52 @@ module Tr4n5l4te
       end
     end
 
+    context 'with proxy option' do
+      it 'accepts --proxy with host:port' do
+        stub_const('ARGV', ['-l', 'es', '-y', fixture_file, '--proxy', '127.0.0.1:8080'])
+        runner = described_class.new
+        expect(runner.options[:proxy]).to eq('127.0.0.1:8080')
+      end
+
+      it 'accepts --proxy with user:pass@host:port' do
+        stub_const('ARGV', ['-l', 'es', '-y', fixture_file, '--proxy', 'foo:bar@10.0.0.1:3128'])
+        runner = described_class.new
+        expect(runner.options[:proxy]).to eq('foo:bar@10.0.0.1:3128')
+      end
+
+      it 'configures proxy during run' do
+        Dir.mktmpdir do |tmpdir|
+          tmpfile = File.join(tmpdir, 'en.yml')
+          FileUtils.cp(fixture_file, tmpfile)
+          stub_const('ARGV', ['-l', 'es', '-y', tmpfile, '--proxy', '127.0.0.1:8080'])
+          runner = described_class.new
+
+          mock_translator = double('translator')
+          allow(mock_translator).to receive(:translate).and_return('traducido')
+          runner.instance_variable_set(:@translator, mock_translator)
+
+          expect { runner.run }.to output(/Processed.*strings/).to_stdout
+          expect(Tr4n5l4te.configuration.proxy).to eq({ addr: '127.0.0.1', port: 8080 })
+        end
+      end
+
+      it 'configures authenticated proxy during run' do
+        Dir.mktmpdir do |tmpdir|
+          tmpfile = File.join(tmpdir, 'en.yml')
+          FileUtils.cp(fixture_file, tmpfile)
+          stub_const('ARGV', ['-l', 'es', '-y', tmpfile, '--proxy', 'foo:bar@10.0.0.1:3128'])
+          runner = described_class.new
+
+          mock_translator = double('translator')
+          allow(mock_translator).to receive(:translate).and_return('traducido')
+          runner.instance_variable_set(:@translator, mock_translator)
+
+          expect { runner.run }.to output(/Processed.*strings/).to_stdout
+          expect(Tr4n5l4te.configuration.proxy).to eq({ addr: '10.0.0.1', port: 3128, user: 'foo', pass: 'bar' })
+        end
+      end
+    end
+
     describe '#run' do
       it 'completes without error' do
         Dir.mktmpdir do |tmpdir|
