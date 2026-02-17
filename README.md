@@ -1,6 +1,6 @@
 # Tr4n5l4te
 
-**Version: 1.0.0**
+**Version: 1.1.0**
 
 Use Google Translate without an API key.
 
@@ -52,6 +52,7 @@ Ruby string interpolation variables (`%{var}`) are preserved through translation
       -i, --list              List known languages
       -s, --sleep-time=<i>    Sleep time (default: 2)
       -t, --timeout=<i>       HTTP request timeout (default: 30)
+      -p, --proxy=<s>         Proxy - host:port or user:pass@host:port
       -v, --verbose           Be verbose with output
       -h, --help              Show this message
 
@@ -65,6 +66,26 @@ The translator will sleep for 2 seconds, by default, between each string transla
 
 Warning: If you pass in '0' and translate a large file, it is very likely that Google will ban your IP address.
 
+### Proxy Support
+
+Route requests through an HTTP proxy to avoid IP bans or to use from behind a firewall:
+
+    $ ./exe/translate -y config/locales/en.yml -l French -p proxy.example.com:8080
+
+With authentication:
+
+    $ ./exe/translate -y config/locales/en.yml -l French -p user:pass@proxy.example.com:8080
+
+You can also configure a proxy programmatically:
+
+```ruby
+Tr4n5l4te.configure do |config|
+  config.proxy = { addr: 'proxy.example.com', port: 8080 }
+  # or with authentication:
+  config.proxy = { addr: 'proxy.example.com', port: 8080, user: 'user', pass: 'pass' }
+end
+```
+
 To list all known languages
 
     $ ./exe/translate --list
@@ -74,6 +95,7 @@ To list all known languages
 ```ruby
 Tr4n5l4te.configure do |config|
   config.timeout = 60 # HTTP request timeout in seconds (default: 30)
+  config.proxy = { addr: 'proxy.example.com', port: 8080 } # optional HTTP proxy
 end
 ```
 
